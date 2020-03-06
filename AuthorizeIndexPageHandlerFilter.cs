@@ -42,7 +42,6 @@ namespace WebApplication22
             var policy = await policyProvider.GetPolicyAsync("YourAuthPolicyHere");
             // Or you may use the default policy if you don't have a specific policy configured.
             // var policy = policyProvider.GetDefaultPolicyAsync();
-            var authorizeAttribute = new AuthorizeAttribute(policy: "YourAuthPolicyHere");
             await AuthoorizeAsync(context, policy);
         }
 
