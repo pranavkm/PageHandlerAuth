@@ -39,19 +39,16 @@ namespace WebApplication22
                 return;
             }
 
+            var policy = await policyProvider.GetPolicyAsync("YourAuthPolicyHere");
+            // Or you may use the default policy if you don't have a specific policy configured.
+            // var policy = policyProvider.GetDefaultPolicyAsync();
             var authorizeAttribute = new AuthorizeAttribute(policy: "YourAuthPolicyHere");
-            await AuthoorizeAsync(context, authorizeAttribute);
+            await AuthoorizeAsync(context, policy);
         }
 
         #region AuthZ - do not change
-        private async Task AuthoorizeAsync(ActionContext actionContext, AuthorizeAttribute authorizeAttribute)
+        private async Task AuthoorizeAsync(ActionContext actionContext, AuthorizationPolicy policy)
         {
-            var policy = await AuthorizationPolicy.CombineAsync(policyProvider, new[] { authorizeAttribute });
-            if (policy is null)
-            {
-                return;
-            }
-
             var httpContext = actionContext.HttpContext;
             var authenticateResult = await policyEvaluator.AuthenticateAsync(policy, httpContext);
             var authorizeResult = await policyEvaluator.AuthorizeAsync(policy, authenticateResult, httpContext, actionContext.ActionDescriptor);
